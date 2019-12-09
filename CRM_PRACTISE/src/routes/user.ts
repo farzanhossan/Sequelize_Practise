@@ -20,7 +20,7 @@ class UserRouter{
     routes(){
         try {
              this.router.get('/',this.userController.getUsers);
-             this.router.post('/createUsers',this.userController.createUsers);
+             this.router.post('/createUser',this.userController.createUsers);
              this.router.put('/updateUsers/:id',this.userController.updateUsers);
              this.router.delete('/deleteUsers/:id',this.userController.deleteUsers);
 

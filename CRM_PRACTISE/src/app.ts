@@ -32,8 +32,7 @@ class App{
         });
         
         this.app.use((error: any, req: any, res: any, next: any) =>{
-            res.status(error.stack || 500);
-            res.json({
+            res.status(500).json({
                 message: error.message
             })
         })
