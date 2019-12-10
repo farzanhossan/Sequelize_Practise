@@ -1,14 +1,14 @@
 // import { Request, Response, NextFunction, Router } from 'express';
 import express from 'express'
 import { UserController } from '../controllers/userControlller'
-// import CheckAuth from '../middleware/checkAuth';
+import CheckAuth from '../middleware/checkAuth';
 import { request } from 'http';
 
 
 class UserRouter{
     public router: express.Router;
     userController = new UserController();
-    // CheckAuth = new CheckAuth().checkAuth;
+    CheckAuth = new CheckAuth().checkAuth;
 
 
     constructor(){
@@ -20,9 +20,11 @@ class UserRouter{
     routes(){
         try {
              this.router.get('/',this.userController.getUsers);
-             this.router.post('/createUser',this.userController.createUsers);
+             this.router.post('/createUser', this.CheckAuth('create_user'),this.userController.createUsers);
              this.router.put('/updateUsers/:id',this.userController.updateUsers);
              this.router.delete('/deleteUsers/:id',this.userController.deleteUsers);
+             this.router.post('/login',this.userController.userLogin);
+
 
          } catch (error) {
             if (error) throw error;

@@ -1,10 +1,9 @@
-import { Request , Response, Express} from 'express'
 require('dotenv').config();
 let jwt = require('jsonwebtoken');
 import User from '../models/User'
-import { any } from 'bluebird';
+require('dotenv').config();
 import bcrypt from "bcrypt";
-import { request } from 'http';
+
 
 
 
@@ -74,7 +73,28 @@ export class UserController {
 
     userLogin = async(req: any, res: any, next: any)=>{
         try {
-            
+            let {email , password } =req.body;
+            let user =await User.findOne({ where: {email: email} });
+            if (user == null) {
+                return res.status(400).json({
+                    message: "Please Register"
+                })
+            }
+            let getStatus=await bcrypt.compare(password, user.password);
+            let userId = {
+                id : user.id
+            }
+            if (getStatus) {
+                let token =jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '6h' });
+                return res.status(200).json({
+                    message: "Login Successful",
+                    token: token
+                })
+            }else{
+                return res.status(400).json({
+                    message: "Email or Password Incorrect"
+                })
+            }
         } catch (error) {
             next(error)
         }

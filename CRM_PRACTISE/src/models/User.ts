@@ -41,8 +41,12 @@ export default sequelize.define("users",{
     role_id:{
         type: Sequelize.INTEGER(),
         allowNull: false,
-        references: 'roles',
-        referencesKey: 'id'
+        references: {
+            model: 'roles',
+            key: 'id'
+        },
+        onUpdate: "cascade",
+        onDelete: "cascade"
     },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,

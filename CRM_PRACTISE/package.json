@@ -10,7 +10,9 @@
     "build": "tsc -p .",
     "migrate": "sequelize db:migrate",
     "revert_migrate": "sequelize db:migrate:undo:all",
-    "create": "sequelize migration:create --name"
+    "create": "sequelize migration:create --name",
+    "seedCreate": "sequelize seed:create --name",
+    "seed": "sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
