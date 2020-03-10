@@ -28,7 +28,7 @@ export class UserController {
     createUsers = async (req: any, res: any, next: any) =>{
         try {
             let {name, email, password, phone_number, role_id} = req.body;
-            const users = await User.create({name: name, email: email, password: password, phone_number: phone_number, role_id: role_id}).then(() => {
+            const users = await User.create({name, email, password, phone_number}).then(() => {
                 return res.status(200).json({
                     message : "successfully Created"
                 })   
@@ -43,7 +43,7 @@ export class UserController {
         try {
             let id = req.params.id;
             let {name, email, password, phone_number, role_id} = req.body;
-            const user = await User.update({name: name, email: email, password: password, phone_number: phone_number, role_id: role_id}, {where: {id: id}}).then(() => {
+            const user = await User.update({name, email, password, phone_number}, {where: {id: id}}).then(() => {
                 return res.status(200).json({
                     message : "successfully Updated"
                 }) 
