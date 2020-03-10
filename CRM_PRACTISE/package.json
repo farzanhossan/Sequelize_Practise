@@ -10,6 +10,7 @@
     "build": "tsc -p .",
     "migrate": "sequelize db:migrate",
     "revert_migrate": "sequelize db:migrate:undo:all",
+    "db": "sequelize db:create",
     "create": "sequelize migration:create --name",
     "seedCreate": "sequelize seed:create --name",
     "seed": "sequelize db:seed:all"
@@ -20,7 +21,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "morgan": "^1.9.1",
-    "mysql": "^2.17.1"
+    "mysql": "^2.17.1",
+    "sequelize": "^5.21.5",
+    "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",

@@ -98,9 +98,7 @@ export class UserController {
         } catch (error) {
             next(error)
         }
-    }
-
-    
+    }    
 }
 
 // async getUsers(req: any, res: any, err: any){

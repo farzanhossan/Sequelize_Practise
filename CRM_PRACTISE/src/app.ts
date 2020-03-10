@@ -3,9 +3,6 @@ import { promises, resolve } from 'dns';
 import bodyParser from 'body-parser';
 
 import userRoutes from './routes/user';
-import roleRoutes from './routes/role';
-import permissionRoutes from './routes/permission';
-import rolePermissionRoutes from './routes/role_permission';
 
 import morgan from 'morgan';
 
@@ -24,10 +21,6 @@ class App{
 
     public routes(): void{
         this.app.use('/api/v1/users', userRoutes);
-        this.app.use('/api/v1/roles', roleRoutes);
-        this.app.use('/api/v1/permissions', permissionRoutes);
-        this.app.use('/api/v1/rolePermissions', rolePermissionRoutes);
-
     }
 
     public errorHandeller(): void{
