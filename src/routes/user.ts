@@ -16,6 +16,8 @@ class UserRouter{
     routes(){
         try {
              this.router.get('/',this.userController.getUsers);
+             this.router.get('/test',this.userController.test);
+             this.router.post('/create',this.userController.createUsers);
          } catch (error) {
             if (error) throw error;
         }

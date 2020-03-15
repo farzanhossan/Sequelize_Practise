@@ -34,10 +34,6 @@ export default sequelize.define("users",{
             }
         }
     },
-    phone_number:{
-        type: Sequelize.STRING(),
-        allowNull: false,
-    },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE,
     deletedAt: Sequelize.DATE

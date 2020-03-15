@@ -1,9 +1,15 @@
 const Sequelize = require('sequelize')
 
-const sequelize = new Sequelize('crm_db', 'root', 'Admin@123',{
+const sequelize = new Sequelize('test', 'root', 'Admin@123',{
     host: 'localhost',
     dialect: 'mysql',
-    operationAliases: false
+    operationAliases: false,
+    dialectOptions: {
+      dateStrings: true,
+      typeCast: true,
+      timezone: "+06:00",
+    },
+    timezone: "+06:00",
 })
 sequelize
   .authenticate()
