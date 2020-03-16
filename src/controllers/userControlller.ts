@@ -3,28 +3,30 @@ let jwt = require("jsonwebtoken");
 import User from "../models/User";
 import Tournament from "../models/Tournament";
 import UserTournaments from "../models/UserTournaments";
+import Country from "../models/Country";
+import Nid from "../models/Nid";
 require("dotenv").config();
 import bcrypt from "bcrypt";
 
-User.belongsToMany(Tournament, {
-  through: UserTournaments,
-  foreignKey: "user_id"
-});
-Tournament.belongsToMany(User, {
-  through: UserTournaments,
-  foreignKey: "tournament_id"
-});
-
 export class UserController {
-  /// Test
-  test = async (req: any, res: any, next: any) => {
+  /// Belongs-To-Many
+  belongsToMany = async (req: any, res: any, next: any) => {
     try {
+      /// Relation
+      User.belongsToMany(Tournament, {
+        through: UserTournaments,
+        foreignKey: "user_id"
+      });
+      Tournament.belongsToMany(User, {
+        through: UserTournaments,
+        foreignKey: "tournament_id"
+      });
+      ///
+
       let user = await User.findOne({
         where: { id: 2 },
         include: [Tournament]
       });
-      console.log(user);
-      
       return res.status(200).json({
         user
       });
@@ -32,6 +34,76 @@ export class UserController {
       next(error);
     }
   };
+
+  /// Belongs-To --- HasMany
+  hasMany = async (req: any, res: any, next: any) => {
+    try {
+      /// Relation
+      User.belongsTo(Country, {
+        foreignKey: "country_id"
+      });
+      Country.hasMany(User, {
+        foreignKey: "country_id"
+      });
+      //
+
+      ////Many To One
+      // let user = await User.findAll({
+      //   include: [Country]
+      // });
+      // return res.status(200).json({
+      //   user
+      // });
+
+      //One To Many
+      let country = await Country.findOne({
+        where: { id: 1 },
+        include: [User]
+      });
+      return res.status(200).json({
+        country
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /// Belongs-To --- HasOne
+  belongsTo = async (req: any, res: any, next: any) => {
+    try {
+      /// Relation
+      User.belongsTo(Country, {
+        foreignKey: "country_id"
+      });
+      let user = await User.findAll({
+        include: [Country]
+      });
+      return res.status(200).json({
+        user
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+    /// Belongs-To --- HasOne
+    hasOne = async (req: any, res: any, next: any) => {
+      try {
+        /// Relation
+        User.hasOne(Nid, {
+          foreignKey: "user_id"
+        });
+        let users = await User.findOne({
+          where: {id: 2},
+          include: [Nid]
+        });
+        return res.status(200).json({
+          users
+        });
+      } catch (error) {
+        next(error);
+      }
+    };
 
   /// Get All Users
   getUsers = async (req: any, res: any, next: any) => {

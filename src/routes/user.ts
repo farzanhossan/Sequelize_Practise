@@ -16,7 +16,10 @@ class UserRouter{
     routes(){
         try {
              this.router.get('/',this.userController.getUsers);
-             this.router.get('/test',this.userController.test);
+             this.router.get('/belongsToMany',this.userController.belongsToMany);
+             this.router.get('/hasMany',this.userController.hasMany);
+             this.router.get('/belongsTo',this.userController.belongsTo);
+             this.router.get('/hasOne',this.userController.hasOne);
              this.router.post('/create',this.userController.createUsers);
          } catch (error) {
             if (error) throw error;
