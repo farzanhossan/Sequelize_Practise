@@ -31,7 +31,7 @@
     "@types/morgan": "^1.7.37",
     "@types/node": "^12.12.9",
     "@types/sequelize": "^4.28.8",
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^3.0.8",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "mysql-migrations": "^1.0.6",

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 
-const sequelize = new Sequelize('test', 'root', 'Admin@123',{
+const sequelize = new Sequelize('test', 'root', '',{
     host: 'localhost',
     dialect: 'mysql',
     operationAliases: false,

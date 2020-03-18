@@ -91,11 +91,17 @@ export class UserController {
       try {
         /// Relation
         User.hasOne(Nid, {
-          foreignKey: "user_id"
+          as: 'EID',
+          foreignKey: "user_id",
         });
         let users = await User.findOne({
           where: {id: 2},
-          include: [Nid]
+          include: [
+            {
+                model: Nid,
+                as: "EID"
+            }],
+           required: false
         });
         return res.status(200).json({
           users
