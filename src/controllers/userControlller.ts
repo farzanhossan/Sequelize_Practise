@@ -2,6 +2,8 @@ require("dotenv").config();
 let jwt = require("jsonwebtoken");
 import User from "../models/User";
 import Tournament from "../models/Tournament";
+import Product from "../models/Product";
+import RelatedProduct from "../models/RelatedProduct";
 import UserTournaments from "../models/UserTournaments";
 import Country from "../models/Country";
 import Nid from "../models/Nid";
@@ -25,7 +27,12 @@ export class UserController {
 
       let user = await User.findOne({
         where: { id: 2 },
-        include: [Tournament]
+        include: {
+          model: Tournament,
+          through: {
+            attributes: []
+          }  
+        }
       });
       return res.status(200).json({
         user
@@ -34,6 +41,40 @@ export class UserController {
       next(error);
     }
   };
+
+    /// Belongs-To-Many Products
+    selfJoin = async (req: any, res: any, next: any) => {
+      try {
+        /// Relation
+        Product.belongsToMany(Product ,{
+          through: RelatedProduct,
+          as: 'Related_Product',
+          foreignKey: 'product_id'
+        });
+
+        Product.belongsToMany(Product ,{
+          through: RelatedProduct,
+          as: 'Product',
+          foreignKey: "related_product_id"
+        });
+        ///
+  
+        let product = await Product.findAll({
+          include: {
+            model: Product,
+            as: "Related_Product",
+            through:{
+              attributes:[]
+            }
+          }
+        });
+        return res.status(200).json({
+          product
+        });
+      } catch (error) {
+        next(error);
+      }
+    };
 
   /// Belongs-To --- HasMany
   hasMany = async (req: any, res: any, next: any) => {
@@ -101,6 +142,7 @@ export class UserController {
                 model: Nid,
                 as: "EID"
             }],
+           raw: true,
            required: false
         });
         return res.status(200).json({

@@ -15,6 +15,7 @@ class App{
         this.app.use(morgan('dev'));
         this.app.use(bodyParser.urlencoded({extended : false}));
         this.app.use(bodyParser.json());
+        this.middleware();
         this.routes();
         this.errorHandeller();
     }
@@ -35,6 +36,12 @@ class App{
                 message: error.message
             })
         })
+    }
+    public middleware(): void{
+        this.app.use((req, res, next) =>{
+            console.log('Checking Middleware')
+            next()
+        });
     }
 
     public start(port: any){

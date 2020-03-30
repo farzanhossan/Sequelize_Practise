@@ -17,6 +17,7 @@ class UserRouter{
         try {
              this.router.get('/',this.userController.getUsers);
              this.router.get('/belongsToMany',this.userController.belongsToMany);
+             this.router.get('/selfJoin',this.userController.selfJoin);
              this.router.get('/hasMany',this.userController.hasMany);
              this.router.get('/belongsTo',this.userController.belongsTo);
              this.router.get('/hasOne',this.userController.hasOne);
