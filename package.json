@@ -5,23 +5,29 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "start": "tsc & node dist/server.js --ignore node_modules/ --ignore data/",
+    "dev": "nodemon src/server.ts --ignore node_modules/ --ignore data/",
     "build": "tsc -p .",
     "migrate": "sequelize db:migrate",
+    "migrate_status": "sequelize db:migrate:status",
     "revert_migrate": "sequelize db:migrate:undo:all",
     "db": "sequelize db:create",
     "create": "sequelize migration:create --name",
     "seedCreate": "sequelize seed:create --name",
-    "seed": "sequelize db:seed:all"
+    "seed": "sequelize db:seed:all",
+    "skeleton": "sequelize migration:generate --name migration-skeleton"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/request": "^2.48.4",
     "express": "^4.17.1",
+    "graceful-fs": "^4.2.3",
     "morgan": "^1.9.1",
+    "multer": "^1.4.2",
     "mysql": "^2.17.1",
+    "request": "^2.88.2",
     "sequelize": "^5.21.5",
     "sequelize-cli": "^5.5.1"
   },

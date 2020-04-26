@@ -3,19 +3,18 @@ import express from 'express'
 import { UserController } from '../controllers/userControlller'
 import { request } from 'http';
 
-
 class UserRouter{
     public router: express.Router;
     userController = new UserController();
     constructor(){
         this.router = express.Router();
         this.routes();
-
     }
 
     routes(){
         try {
              this.router.get('/',this.userController.getUsers);
+             this.router.get('/test',this.userController.test);
              this.router.get('/belongsToMany',this.userController.belongsToMany);
              this.router.get('/selfJoin',this.userController.selfJoin);
              this.router.get('/hasMany',this.userController.hasMany);

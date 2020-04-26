@@ -1,9 +1,7 @@
 import express from 'express';
 import { promises, resolve } from 'dns';
 import bodyParser from 'body-parser';
-
 import userRoutes from './routes/user';
-
 import morgan from 'morgan';
 
 class App{
@@ -13,8 +11,8 @@ class App{
     constructor(){
         this.app = express();
         this.app.use(morgan('dev'));
-        this.app.use(bodyParser.urlencoded({extended : false}));
         this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({extended : true}));
         this.middleware();
         this.routes();
         this.errorHandeller();
@@ -42,6 +40,12 @@ class App{
             console.log('Checking Middleware')
             next()
         });
+    }
+
+    public fileHandler(): void{
+        this.app.use((req, res, next)=>{
+            
+        })
     }
 
     public start(port: any){

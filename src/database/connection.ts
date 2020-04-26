@@ -10,11 +10,13 @@ const sequelize = new Sequelize('test', 'root', '',{
       timezone: "+06:00",
     },
     timezone: "+06:00",
+    // logging: false
 })
 sequelize
   .authenticate()
   .then(() => {
-    console.error('Database Connected');
+    console.timeEnd('Database Connection Time');
+    console.log('Database Connected');
   })
   .catch((err: any) => {
     console.error('Unable to connect to the database:', err);
