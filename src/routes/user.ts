@@ -19,6 +19,7 @@ class UserRouter{
              this.router.get('/selfJoin',this.userController.selfJoin);
              this.router.get('/hasMany',this.userController.hasMany);
              this.router.get('/belongsTo',this.userController.belongsTo);
+             this.router.get('/case',this.userController.case);
              this.router.get('/hasOne',this.userController.hasOne);
              this.router.post('/create',this.userController.createUsers);
          } catch (error) {

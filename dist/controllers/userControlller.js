@@ -24,7 +24,10 @@ const Nid_1 = __importDefault(require("../models/Nid"));
 require("dotenv").config();
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const multer_1 = require("../helper/multer");
-var fs = require('graceful-fs');
+const response_1 = require("../helper/response");
+const sequelize_1 = require("sequelize");
+var schedule = require("node-schedule");
+var fs = require("graceful-fs");
 // var multer = require('multer')
 // var upload = multer({ dest: 'uploads/' }).single('files');
 class UserController {
@@ -32,10 +35,50 @@ class UserController {
         /// Belongs-To-Many
         this.test = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const file = fs.readFileSync('comparison.docx');
-                return res.status(200).json({
-                    file
-                });
+                // // File read
+                // const file = fs.readFileSync('comparison.docx');
+                // return res.status(200).json({
+                //   file
+                // });
+                // const util = await generateMifeToken();
+                // return res.status(200).json({
+                //   status: util.statusCode,
+                //   body:  JSON.parse(util.body)
+                // });
+                ///
+                // const user = await sequelize.query(
+                //   'SELECT * FROM new_view',
+                //   {
+                //     type: QueryTypes.SELECT
+                //   }
+                // );
+                // const user = await UserView.findAll({
+                //   where : { email: 'super@gmail.com'},
+                //   attributes:['name', 'email']
+                // });
+                // const fcm = await FcmNotification();
+                // return res.status(200).json({
+                //   fcm
+                // });
+                // const t =new Promise(async(resolve)=>{
+                //   await schedule.scheduleJob("*/1 * * * *", async () => {
+                //     let user = await User.findOne({
+                //       where: { id: 1 },
+                //     });
+                //     console.log(user);
+                //     resolve(user);
+                //   });
+                // });
+                const filePath = "/index.html";
+                // var myModulePath = require("app-root-path").path;
+                // const filePath = path.join('/src/controllers/index.html', { root: __dirname });
+                // console.log(`${myModulePath + filePath}`);
+                // res.sendFile(`${myModulePath+filePath}`)
+                return response_1.resSend("Test", "ResponseData", "message", 200, true, res, filePath);
+                // const t = await responseFile(res);
+                // return res.status(200).json({
+                //   t: JSON.stringify(t)
+                // });
             }
             catch (error) {
                 next(error);
@@ -48,12 +91,12 @@ class UserController {
                 User_1.default.belongsToMany(Tournament_1.default, {
                     through: UserTournaments_1.default,
                     foreignKey: "user_id",
-                    foreignKeyConstraint: true
+                    foreignKeyConstraint: true,
                 });
                 Tournament_1.default.belongsToMany(User_1.default, {
                     through: UserTournaments_1.default,
                     foreignKey: "tournament_id",
-                    foreignKeyConstraint: true
+                    foreignKeyConstraint: true,
                 });
                 ///
                 let user = yield User_1.default.findOne({
@@ -61,12 +104,12 @@ class UserController {
                     include: {
                         model: Tournament_1.default,
                         through: {
-                            attributes: []
-                        }
-                    }
+                            attributes: [],
+                        },
+                    },
                 });
                 return res.status(200).json({
-                    user
+                    user,
                 });
             }
             catch (error) {
@@ -79,13 +122,13 @@ class UserController {
                 /// Relation
                 Product_1.default.belongsToMany(Product_1.default, {
                     through: RelatedProduct_1.default,
-                    as: 'Related_Product',
-                    foreignKey: 'product_id'
+                    as: "Related_Product",
+                    foreignKey: "product_id",
                 });
                 Product_1.default.belongsToMany(Product_1.default, {
                     through: RelatedProduct_1.default,
-                    as: 'Product',
-                    foreignKey: "related_product_id"
+                    as: "Product",
+                    foreignKey: "related_product_id",
                 });
                 ///
                 let product = yield Product_1.default.findAll({
@@ -93,12 +136,12 @@ class UserController {
                         model: Product_1.default,
                         as: "Related_Product",
                         through: {
-                            attributes: []
-                        }
-                    }
+                            attributes: [],
+                        },
+                    },
                 });
                 return res.status(200).json({
-                    product
+                    product,
                 });
             }
             catch (error) {
@@ -111,11 +154,11 @@ class UserController {
                 // Relation
                 User_1.default.belongsTo(Country_1.default, {
                     foreignKey: "country_id",
-                    foreignKeyConstraint: true
+                    foreignKeyConstraint: true,
                 });
                 Country_1.default.hasMany(User_1.default, {
                     foreignKey: "country_id",
-                    foreignKeyConstraint: true
+                    foreignKeyConstraint: true,
                 });
                 //
                 // //Many To One
@@ -133,13 +176,13 @@ class UserController {
                     // where: { name: { [Op.in]: ['Bangladesh'] } },
                     include: {
                         model: User_1.default,
-                    }
+                    },
                 });
                 return res.status(200).json({
-                    country
+                    country,
                 });
                 //Sub-Query
-                // const users = await sequelize.query("SELECT * FROM `users` where country_id IN ('1')", 
+                // const users = await sequelize.query("SELECT * FROM `users` where country_id IN ('1')",
                 // { type: QueryTypes.SELECT });
                 // const product = await BannerProduct.findAll({
                 //         attributes: ['product_id']
@@ -181,13 +224,35 @@ class UserController {
             try {
                 /// Relation
                 User_1.default.belongsTo(Country_1.default, {
-                    foreignKey: "country_id"
+                    foreignKey: "country_id",
                 });
                 let user = yield User_1.default.findAll({
-                    include: [Country_1.default]
+                    include: [Country_1.default],
                 });
                 return res.status(200).json({
-                    user
+                    user,
+                });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+        /// Belongs-To --- HasOne
+        this.case = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield User_1.default.findAll({
+                    attributes: [
+                        [
+                            sequelize_1.Sequelize.literal(`CASE 
+                  WHEN country_id > 1 THEN 1 
+                  ELSE "Not Found"
+              END`),
+                            "country_id",
+                        ],
+                    ],
+                });
+                return res.status(200).json({
+                    user,
                 });
             }
             catch (error) {
@@ -199,7 +264,7 @@ class UserController {
             try {
                 /// Relation
                 User_1.default.hasOne(Nid_1.default, {
-                    as: 'EID',
+                    as: "EID",
                     foreignKey: "user_id",
                 });
                 let users = yield User_1.default.findOne({
@@ -207,14 +272,14 @@ class UserController {
                     include: [
                         {
                             model: Nid_1.default,
-                            as: "EID"
-                        }
+                            as: "EID",
+                        },
                     ],
                     raw: true,
-                    required: false
+                    required: false,
                 });
                 return res.status(200).json({
-                    users
+                    users,
                 });
             }
             catch (error) {
@@ -225,12 +290,13 @@ class UserController {
         this.getUsers = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const users = yield User_1.default.findAll();
+                console.log("users");
                 return res.status(200).json({
-                    users
+                    users,
                 });
             }
             catch (error) {
-                next(error);
+                return next(error);
             }
         });
         /// Create User
@@ -242,16 +308,21 @@ class UserController {
                 //     resolve(req.file)
                 //   })
                 // });
-                let fileInfo = yield multer_1.fileUpload('files', req, res);
+                let fileInfo = yield multer_1.fileUpload("files", req, res);
                 console.log(req.file);
                 let { name, email, password, country_id } = req.body;
                 return res.status(200).json({
-                    message: "successfully Created"
+                    message: "successfully Created",
                 });
                 // upload.single(files);
-                const users = yield User_1.default.create({ name, email, password, country_id }).then(() => {
+                const users = yield User_1.default.create({
+                    name,
+                    email,
+                    password,
+                    country_id,
+                }).then(() => {
                     return res.status(200).json({
-                        message: "successfully Created"
+                        message: "successfully Created",
                     });
                 });
             }
@@ -266,7 +337,7 @@ class UserController {
                 let { name, email, password } = req.body;
                 const user = yield User_1.default.update({ name, email, password }, { where: { id: id } }).then(() => {
                     return res.status(200).json({
-                        message: "successfully Updated"
+                        message: "successfully Updated",
                     });
                 });
             }
@@ -280,7 +351,7 @@ class UserController {
                 let id = req.params.id;
                 const user = yield User_1.default.destroy({ where: { id: id } }).then(() => {
                     return res.status(200).json({
-                        message: "successfully Deleted"
+                        message: "successfully Deleted",
                     });
                 });
             }
@@ -295,25 +366,25 @@ class UserController {
                 let user = yield User_1.default.findOne({ where: { email: email } });
                 if (user == null) {
                     return res.status(400).json({
-                        message: "Please Register"
+                        message: "Please Register",
                     });
                 }
                 let getStatus = yield bcrypt_1.default.compare(password, user.password);
                 let userId = {
-                    id: user.id
+                    id: user.id,
                 };
                 if (getStatus) {
                     let token = jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET, {
-                        expiresIn: "6h"
+                        expiresIn: "6h",
                     });
                     return res.status(200).json({
                         message: "Login Successful",
-                        token: token
+                        token: token,
                     });
                 }
                 else {
                     return res.status(400).json({
-                        message: "Email or Password Incorrect"
+                        message: "Email or Password Incorrect",
                     });
                 }
             }

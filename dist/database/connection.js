@@ -11,7 +11,6 @@ const sequelize = new Sequelize('test', 'root', '', {
         timezone: "+06:00",
     },
     timezone: "+06:00",
-    logging: false
 });
 sequelize
     .authenticate()

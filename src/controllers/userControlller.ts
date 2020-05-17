@@ -11,6 +11,13 @@ import Nid from "../models/Nid";
 require("dotenv").config();
 import bcrypt from "bcrypt";
 import { fileUpload } from "../helper/multer";
+import { FcmNotification } from "../helper/fcm";
+import { TimeSchedule } from "../helper/scheduler";
+import { responseFile } from "../helper/file";
+import { resSend } from "../helper/response";
+import { Sequelize } from "sequelize";
+var schedule = require("node-schedule");
+
 var fs = require("graceful-fs");
 // var multer = require('multer')
 // var upload = multer({ dest: 'uploads/' }).single('files');
@@ -38,13 +45,44 @@ export class UserController {
       //   }
       // );
 
-      const user = await UserView.findAll({
-        where : { email: 'super@gmail.com'},
-        attributes:['name', 'email']
-      });
-      return res.status(200).json({
-        user
-      });
+      // const user = await UserView.findAll({
+      //   where : { email: 'super@gmail.com'},
+      //   attributes:['name', 'email']
+      // });
+
+      // const fcm = await FcmNotification();
+      // return res.status(200).json({
+      //   fcm
+      // });
+      // const t =new Promise(async(resolve)=>{
+      //   await schedule.scheduleJob("*/1 * * * *", async () => {
+      //     let user = await User.findOne({
+      //       where: { id: 1 },
+      //     });
+      //     console.log(user);
+      //     resolve(user);
+      //   });
+
+      // });
+      const filePath = "/index.html";
+      // var myModulePath = require("app-root-path").path;
+
+      // const filePath = path.join('/src/controllers/index.html', { root: __dirname });
+      // console.log(`${myModulePath + filePath}`);
+      // res.sendFile(`${myModulePath+filePath}`)
+      return resSend(
+        "Test",
+        "ResponseData",
+        "message",
+        200,
+        true,
+        res,
+        filePath
+      );
+      // const t = await responseFile(res);
+      // return res.status(200).json({
+      //   t: JSON.stringify(t)
+      // });
     } catch (error) {
       next(error);
     }
@@ -213,6 +251,30 @@ export class UserController {
   };
 
   /// Belongs-To --- HasOne
+  case = async (req: any, res: any, next: any) => {
+    try {
+      const user = await User.findAll({
+        attributes: [
+          [
+            Sequelize.literal(
+              `CASE 
+                  WHEN country_id > 1 THEN 1 
+                  ELSE "Not Found"
+              END`
+            ),
+            "country_id",
+          ],
+        ],
+      });
+      return res.status(200).json({
+        user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /// Belongs-To --- HasOne
   hasOne = async (req: any, res: any, next: any) => {
     try {
       /// Relation
@@ -243,11 +305,12 @@ export class UserController {
   getUsers = async (req: any, res: any, next: any) => {
     try {
       const users = await User.findAll();
+      console.log("users");
       return res.status(200).json({
         users,
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   };
 
