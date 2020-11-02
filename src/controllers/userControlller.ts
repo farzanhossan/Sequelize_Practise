@@ -1,24 +1,22 @@
-require("dotenv").config();
-let jwt = require("jsonwebtoken");
-import User from "../models/User";
-import UserView from "../models/UserView";
-import Tournament from "../models/Tournament";
-import Product from "../models/Product";
-import RelatedProduct from "../models/RelatedProduct";
-import UserTournaments from "../models/UserTournaments";
-import Country from "../models/Country";
-import Nid from "../models/Nid";
-require("dotenv").config();
-import bcrypt from "bcrypt";
-import { fileUpload } from "../helper/multer";
-import { FcmNotification } from "../helper/fcm";
-import { TimeSchedule } from "../helper/scheduler";
-import { responseFile } from "../helper/file";
-import { resSend } from "../helper/response";
-import { Sequelize } from "sequelize";
-var schedule = require("node-schedule");
+let jwt = require('jsonwebtoken');
+import bcrypt from 'bcrypt';
+import { Op, QueryTypes, Sequelize } from 'sequelize';
+import sequelize from '../database/connection';
+import { fileUpload } from '../helper/multer';
+import { resSend } from '../helper/response';
+import Country from '../models/Country';
+import Nid from '../models/Nid';
+import Product from '../models/Product';
+import RelatedProduct from '../models/RelatedProduct';
+import Tournament from '../models/Tournament';
+import User from '../models/User';
+import UserTournaments from '../models/UserTournaments';
+require('dotenv').config();
+var schedule = require('node-schedule');
+import moment from 'moment';
+import { Mail } from '../helper/mail';
 
-var fs = require("graceful-fs");
+var fs = require('graceful-fs');
 // var multer = require('multer')
 // var upload = multer({ dest: 'uploads/' }).single('files');
 
@@ -64,21 +62,14 @@ export class UserController {
       //   });
 
       // });
-      const filePath = "/index.html";
+      // const filePath = '/index.html';
       // var myModulePath = require("app-root-path").path;
 
       // const filePath = path.join('/src/controllers/index.html', { root: __dirname });
       // console.log(`${myModulePath + filePath}`);
       // res.sendFile(`${myModulePath+filePath}`)
-      return resSend(
-        "Test",
-        "ResponseData",
-        "message",
-        200,
-        true,
-        res,
-        filePath
-      );
+      await Mail('farzanhossans@gmail.com', 'asd', 'Hello Test');
+      return resSend('Test', 'ResponseData', 'message', 200, true, res);
       // const t = await responseFile(res);
       // return res.status(200).json({
       //   t: JSON.stringify(t)
@@ -94,12 +85,12 @@ export class UserController {
       /// Relation
       User.belongsToMany(Tournament, {
         through: UserTournaments,
-        foreignKey: "user_id",
+        foreignKey: 'user_id',
         foreignKeyConstraint: true,
       });
       Tournament.belongsToMany(User, {
         through: UserTournaments,
-        foreignKey: "tournament_id",
+        foreignKey: 'tournament_id',
         foreignKeyConstraint: true,
       });
       ///
@@ -127,21 +118,21 @@ export class UserController {
       /// Relation
       Product.belongsToMany(Product, {
         through: RelatedProduct,
-        as: "Related_Product",
-        foreignKey: "product_id",
+        as: 'Related_Product',
+        foreignKey: 'product_id',
       });
 
       Product.belongsToMany(Product, {
         through: RelatedProduct,
-        as: "Product",
-        foreignKey: "related_product_id",
+        as: 'Product',
+        foreignKey: 'related_product_id',
       });
       ///
 
       let product = await Product.findAll({
         include: {
           model: Product,
-          as: "Related_Product",
+          as: 'Related_Product',
           through: {
             attributes: [],
           },
@@ -160,11 +151,11 @@ export class UserController {
     try {
       // Relation
       User.belongsTo(Country, {
-        foreignKey: "country_id",
+        foreignKey: 'country_id',
         foreignKeyConstraint: true,
       });
       Country.hasMany(User, {
-        foreignKey: "country_id",
+        foreignKey: 'country_id',
         foreignKeyConstraint: true,
       });
       //
@@ -237,7 +228,7 @@ export class UserController {
     try {
       /// Relation
       User.belongsTo(Country, {
-        foreignKey: "country_id",
+        foreignKey: 'country_id',
       });
       let user = await User.findAll({
         include: [Country],
@@ -262,7 +253,7 @@ export class UserController {
                   ELSE "Not Found"
               END`
             ),
-            "country_id",
+            'country_id',
           ],
         ],
       });
@@ -279,15 +270,15 @@ export class UserController {
     try {
       /// Relation
       User.hasOne(Nid, {
-        as: "EID",
-        foreignKey: "user_id",
+        as: 'EID',
+        foreignKey: 'user_id',
       });
       let users = await User.findOne({
         where: { id: 2 },
         include: [
           {
             model: Nid,
-            as: "EID",
+            as: 'EID',
           },
         ],
         raw: true,
@@ -305,7 +296,7 @@ export class UserController {
   getUsers = async (req: any, res: any, next: any) => {
     try {
       const users = await User.findAll();
-      console.log("users");
+      console.log('users');
       return res.status(200).json({
         users,
       });
@@ -323,11 +314,11 @@ export class UserController {
       //     resolve(req.file)
       //   })
       // });
-      let fileInfo: any = await fileUpload("files", req, res);
+      let fileInfo: any = await fileUpload('files', req, res);
       console.log(req.file);
       let { name, email, password, country_id } = req.body;
       return res.status(200).json({
-        message: "successfully Created",
+        message: 'successfully Created',
       });
 
       // upload.single(files);
@@ -338,7 +329,7 @@ export class UserController {
         country_id,
       }).then(() => {
         return res.status(200).json({
-          message: "successfully Created",
+          message: 'successfully Created',
         });
       });
     } catch (error) {
@@ -356,7 +347,7 @@ export class UserController {
         { where: { id: id } }
       ).then(() => {
         return res.status(200).json({
-          message: "successfully Updated",
+          message: 'successfully Updated',
         });
       });
     } catch (error) {
@@ -370,7 +361,7 @@ export class UserController {
       let id = req.params.id;
       const user = await User.destroy({ where: { id: id } }).then(() => {
         return res.status(200).json({
-          message: "successfully Deleted",
+          message: 'successfully Deleted',
         });
       });
     } catch (error) {
@@ -386,7 +377,7 @@ export class UserController {
       let user = await User.findOne({ where: { email: email } });
       if (user == null) {
         return res.status(400).json({
-          message: "Please Register",
+          message: 'Please Register',
         });
       }
       let getStatus = await bcrypt.compare(password, user.password);
@@ -395,15 +386,15 @@ export class UserController {
       };
       if (getStatus) {
         let token = jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: "6h",
+          expiresIn: '6h',
         });
         return res.status(200).json({
-          message: "Login Successful",
+          message: 'Login Successful',
           token: token,
         });
       } else {
         return res.status(400).json({
-          message: "Email or Password Incorrect",
+          message: 'Email or Password Incorrect',
         });
       }
     } catch (error) {
