@@ -28,7 +28,7 @@
     "@types/request": "^2.48.4",
     "app-root-path": "^3.0.0",
     "autocannon": "^4.6.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fcm-node": "^1.5.2",
     "fcm-notification": "^2.0.0",
     "firebase-admin": "^8.11.0",
